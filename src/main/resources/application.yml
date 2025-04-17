@@ -1,0 +1,21 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: accounting
+  datasource:
+    url: jdbc:postgresql://localhost:5432/accounting
+    username: accounting
+    password: accounting
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/hfk

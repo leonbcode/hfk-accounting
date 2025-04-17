@@ -1,0 +1,44 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.0
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    command: start-dev
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      - DB_VENDOR=POSTGRES
+      - DB_ADDR=keycloak-db:5432
+      - DB_DATABASE=keycloak
+      - DB_USER=keycloak
+      - DB_PASSWORD=keycloak
+    depends_on:
+      - keycloak-db
+
+  keycloak-db:
+    image: postgres:17.4-alpine
+    restart: unless-stopped
+    volumes:
+      - keycloak-db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+      POSTGRES_DB: keycloak
+
+  accounting-db:
+    image: postgres:17.4-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - accounting-db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: accounting
+      POSTGRES_PASSWORD: accounting
+      POSTGRES_DB: accounting
+
+
+volumes:
+  keycloak-db_data:
+  accounting-db_data:
