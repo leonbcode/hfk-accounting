@@ -1,4 +1,4 @@
 package de.whak.hfk.dto;
 
-public class TransactionDTO {
+public record TransactionDTO() {
 }

@@ -19,6 +19,10 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
+    public AccountDTO getAccount(UUID id) {
+        return accountRepository.findById(id).map(AccountDTO::new).orElse(null);
+    }
+
     public AccountDTO getUserAccount(Jwt jwt) {
         UUID owner = UUID.fromString(jwt.getSubject());
         Account account = accountRepository.findByOwner(owner);
@@ -35,13 +39,13 @@ public class AccountService {
     }
 
     public AccountDTO updateAccount(AccountDTO accountDTO) {
-        Optional<Account> optionalAccount = accountRepository.findById(accountDTO.getId());
+        Optional<Account> optionalAccount = accountRepository.findById(accountDTO.id());
 
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
-            account.setOwner(accountDTO.getOwner());
-            account.setName(accountDTO.getName());
-            account.setActive(accountDTO.isActive());
+            account.setOwner(accountDTO.owner());
+            account.setName(accountDTO.name());
+            account.setActive(accountDTO.active());
             return new AccountDTO(accountRepository.save(account));
         }
         return null;

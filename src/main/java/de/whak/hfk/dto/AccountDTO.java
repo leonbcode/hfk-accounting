@@ -1,24 +1,17 @@
 package de.whak.hfk.dto;
 
 import de.whak.hfk.model.Account;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
-public class AccountDTO {
-    private UUID id;
-    private UUID owner;
-    private String name;
-    private boolean active;
+public record AccountDTO(UUID id, @NotBlank UUID owner, @NotBlank @Size(max = 512) String name,
+                         @NotNull boolean active) {
 
     public AccountDTO(Account account) {
-        this.id = account.getId();
-        this.owner = account.getOwner();
-        this.name = account.getName();
-        this.active = account.isActive();
+        this(account.getId(), account.getOwner(), account.getName(), account.isActive());
     }
 
     public Account toEntity() {
