@@ -15,10 +15,14 @@ import java.util.UUID;
 @Component
 public class CustomPermissionEvaluator implements PermissionEvaluator {
 
-    @Autowired
-    private RegisterService registerService;
-    @Autowired
-    private AccountService accountService;
+    private final RegisterService registerService;
+
+    private final AccountService accountService;
+
+    public CustomPermissionEvaluator(RegisterService registerService, AccountService accountService) {
+        this.registerService = registerService;
+        this.accountService = accountService;
+    }
 
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {

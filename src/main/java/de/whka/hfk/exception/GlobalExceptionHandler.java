@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     }
 
     @Getter
-    public class ErrorResponse {
+    public static class ErrorResponse {
         private final int code;
         private final String path;
         private final LocalDateTime timestamp;

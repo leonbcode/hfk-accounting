@@ -1,7 +1,5 @@
 package de.whka.hfk.security;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,7 +26,6 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
 
     public static class KeycloakRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
-        private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
         private static final String ROLE_PREFIX = "ROLE_";
 
         @Override
@@ -41,25 +38,15 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
         }
 
         private Collection<SimpleGrantedAuthority> extractResourceRoles(Jwt jwt) {
-            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
+            if (resourceAccess == null) return Collections.emptyList();
 
-            JsonNode accountingRolesNode = OBJECT_MAPPER
-                    .valueToTree(jwt.getClaims())
-                    .path("resource_access")
-                    .path("accounting")
-                    .path("roles");
+            Map<String, Object> accountResource = (Map<String, Object>) resourceAccess.get("accounting");
+            if (accountResource == null) return Collections.emptyList();
 
-            if (!accountingRolesNode.isArray()) {
-                return authorities;
-            }
-
-            accountingRolesNode.forEach(roleNode -> {
-                if (roleNode.isTextual()) {
-                    authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + roleNode.asText()));
-                }
-            });
-
-            return authorities;
+            List<String> roles = (List<String>) accountResource.get("roles");
+            if(roles == null) return Collections.emptyList();
+            return roles.stream().map(role -> new SimpleGrantedAuthority(ROLE_PREFIX + role)).toList();
         }
     }
 }

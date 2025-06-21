@@ -21,6 +21,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final CustomPermissionEvaluator permissionEvaluator;
+
+    public SecurityConfig(CustomPermissionEvaluator permissionEvaluator) {
+        this.permissionEvaluator = permissionEvaluator;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -47,7 +53,7 @@ public class SecurityConfig {
     @Bean
     public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-        expressionHandler.setPermissionEvaluator(new CustomPermissionEvaluator());
+        expressionHandler.setPermissionEvaluator(permissionEvaluator);
         return expressionHandler;
     }
 

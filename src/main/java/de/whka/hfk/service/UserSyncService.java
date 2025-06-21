@@ -23,7 +23,7 @@ public class UserSyncService {
             .serverUrl("http://localhost:8080")
             .realm("hfk")
             .clientId("admin-cli")
-            .clientSecret("J2hbqxJw9fDFz4E8okWfXUwbfUjDPEFZ")
+            .clientSecret("kZMosKdKNgnkSBgYg3zJUODuXUAdAmrW")
             .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
             .build();
 

@@ -33,7 +33,7 @@ public class TransactionLine {
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false)
     private EntryType entryType;
 
     public TransactionLine(Transaction transaction, Account account, BigDecimal amount, EntryType entryType) {
